@@ -118,6 +118,7 @@
             background: linear-gradient(135deg, #fceabb, #f8b500);
             margin: 0;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
 
         .birthday-card {
@@ -275,6 +276,17 @@
                 opacity: 0;
             }
         }
+
+        a[skibidi="true"] {
+            position: absolute;
+            bottom: 250px;
+            transform: scale(10%);
+            transition: transform 0.25s cubic-bezier(0.69, 0.02, 0.36, 1);
+        }
+        .birthday-card:hover + a[skibidi="true"] {
+            position: absolute;
+            transform: scale(12%) translateY(20%)
+        }
     </style>
 </head>
 
@@ -285,17 +297,18 @@
             <h2 class="birthday-title">Շնորհավոր Մամա!</h2>
             <img src="https://scholar.googleusercontent.com/citations?view_op=view_photo&user=s_BuX_oAAAAJ&citpid=2"
                 alt="Birthday Person" class="birthday-image">
-            <p class="birthday-message">Մի հատ լավ ծնունդ ստացի, և մի հատ լավ կյանք!</p>
+                <p class="birthday-message">Մի հատ լավ ծնունդ ստացի, և մի հատ լավ կյանք!</p>
+            </div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <flower-tag class="flower top" type="rose"></flower-tag>
+            <flower-tag class="flower bottom-left" type="rose" rotate="55"></flower-tag>
         </div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <flower-tag class="flower top" type="rose"></flower-tag>
-        <flower-tag class="flower bottom-left" type="rose" rotate="55"></flower-tag>
-    </div>
+    <a skibidi="true" href="https://www.youtube.com/watch?v=K3cD2CuRaiQ">կպի</a>
     <flower-tag class="flower top-left" size="50" type="tulip" rotate="135"></flower-tag>
     <flower-tag class="flower top" size="50" type="daffodil" rotate="180"></flower-tag>
     <flower-tag class="flower top-right" size="50" type="tulip" rotate="225"></flower-tag>
@@ -303,21 +316,11 @@
     <flower-tag class="flower bottom-right" size="50" type="tulip" rotate="315"></flower-tag>
     <script>
         function handle() {
-            const card = document.getElementsByClassName("birthday-card")[0]
-            card.style.transform = "scale(200%) translateX(-25%)";
-
-            setTimeout(() => {// Create and position new element
-                const newElement = document.createElement("div");
-                newElement.innerHTML = "<a href=\"https://www.youtube.com/watch?v=K3cD2CuRaiQ\"></a>"; // You can change this to whatever content you want
-                newElement.style.position = "absolute";
-                newElement.style.left = "50%";
-                newElement.style.top = "50%";
-                newElement.style.transform = "translate(-50%, -50%)";
-
-                // Add to document
-                document.body.appendChild(newElement);
-            }, 250);
-        }   
+            const card = document.getElementsByClassName("birthday-card")[0];
+            card.style.transform = "scale(300%) translateY(-25%)";
+            const link = document.querySelector("a");
+            link.style.transform = "scale(300%)";
+        }
     </script>
 </body>
 
