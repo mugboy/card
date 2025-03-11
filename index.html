@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Մամաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաաա</title>
+    <script>
+        class FlowerTag extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+            }
+
+            connectedCallback() {
+                this.render();
+            }
+
+            static get observedAttributes() {
+                return ['size', 'rotate', 'type'];
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                if (oldValue !== newValue) {
+                    this.render();
+                }
+            }
+
+            render() {
+                const size = parseInt(this.getAttribute('size')) || 50;
+                const rotate = parseInt(this.getAttribute('rotate')) || 0;
+                const type = this.getAttribute('type') || 'daffodil';
+
+                let flowerSVG = '';
+
+                switch (type.toLowerCase()) {
+                    case 'daffodil':
+                        flowerSVG = this.createDaffodil(size, rotate);
+                        break;
+                    case 'rose':
+                        flowerSVG = this.createRose(size, rotate);
+                        break;
+                    case 'tulip':
+                        flowerSVG = this.createTulip(size, rotate);
+                        break;
+                    case 'sunflower':
+                        flowerSVG = this.createSunflower(size, rotate);
+                        break;
+                    default:
+                        flowerSVG = this.createDaffodil(size, rotate);
+                }
+
+                this.shadowRoot.innerHTML = `
+              <svg width="${size * 2}" height="${size * 2}" viewBox="${-size} ${-size} ${size * 2} ${size * 2}">
+                <g transform="rotate(${rotate})">
+                  ${flowerSVG}
+                </g>
+              </svg>
+            `;
+            }
+
+            createDaffodil(size, rotate) {
+                let petals = '';
+                const numPetals = 6;
+                for (let i = 0; i < numPetals; i++) {
+                    const angle = (360 / numPetals) * i;
+                    const x = size * 0.8 * Math.cos((angle * Math.PI) / 180);
+                    const y = size * 0.8 * Math.sin((angle * Math.PI) / 180);
+                    petals += `<ellipse cx="${x}" cy="${y}" rx="${size * 0.3}" ry="${size * 0.15}" fill="yellow" transform="rotate(${angle})"/>`;
+                }
+                return `
+              <circle cx="0" cy="0" r="${size * 0.2}" fill="orange" />
+              ${petals}
+              <ellipse cx="0" cy="0" rx="${size * 0.4}" ry="${size * 0.2}" fill="orange"/>
+            `;
+            }
+
+            createRose(size, rotate) {
+                let rose = '';
+                rose += `<path d="M 0,0 C ${size * 0.5},${-size * 0.8} ${size * 1.2},0 ${size * 0.5},${size * 0.8} C 0,0 ${-size * 1.2},0 ${-size * 0.5},${size * 0.8} C 0,0 ${-size * 0.5},${-size * 0.8} ${size * 0.5},${-size * 0.8} Z" fill="red" />`;
+                rose += `<circle cx="0" cy="0" r="${size * 0.3}" fill="darkred" />`;
+
+                return rose;
+            }
+
+            createTulip(size, rotate) {
+                let tulip = '';
+                tulip += `<path d="M 0,0 C ${size * 0.3},${-size * 0.8} ${size * 0.8},${-size * 0.3} ${size * 0.5},0 C 0,0 ${-size * 0.8},${-size * 0.3} ${-size * 0.3},${-size * 0.8} Z" fill="pink" />`;
+                tulip += `<path d="M 0,0 L 0,${size * 0.8} L ${size * 0.2},${size * 1.2} L ${-size * 0.2},${size * 1.2} Z" fill="green" />`
+
+                return tulip;
+            }
+
+            createSunflower(size, rotate) {
+                let petals = '';
+                const numPetals = 16;
+                for (let i = 0; i < numPetals; i++) {
+                    const angle = (360 / numPetals) * i;
+                    const x = size * 0.8 * Math.cos((angle * Math.PI) / 180);
+                    const y = size * 0.8 * Math.sin((angle * Math.PI) / 180);
+                    petals += `<polygon points="${x},${y} ${x + size * 0.1 * Math.cos((angle + 10) * Math.PI / 180)},${y + size * 0.1 * Math.sin((angle + 10) * Math.PI / 180)} ${x + size * 0.1 * Math.cos((angle - 10) * Math.PI / 180)},${y + size * 0.1 * Math.sin((angle - 10) * Math.PI / 180)}" fill="orange"/>`;
+                }
+                return `
+              <circle cx="0" cy="0" r="${size * 0.4}" fill="brown" />
+              ${petals}
+            `;
+            }
+        }
+
+        customElements.define('flower-tag', FlowerTag);
+    </script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fceabb, #f8b500);
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .birthday-card {
+            cursor: pointer;
+            position: relative;
+            width: auto;
+            height: auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.25s cubic-bezier(0.69, 0.02, 0.36, 1);
+        }
+
+        .birthday-card::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .birthday-card::after {
+            content: "";
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .card-content {
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .birthday-title {
+            font-size: 2.5em;
+            color: #e91e63;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .birthday-message {
+            font-size: 1.2em;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .birthday-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 20px auto;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        .confetti:nth-child(1) {
+            background-color: #ffeb3b;
+            left: 10%;
+            animation-delay: 0.5s;
+        }
+
+        .confetti:nth-child(2) {
+            background-color: #4caf50;
+            left: 30%;
+            animation-delay: 1s;
+        }
+
+        .confetti:nth-child(3) {
+            background-color: #f44336;
+            left: 50%;
+            animation-delay: 1.5s;
+        }
+
+        .confetti:nth-child(4) {
+            background-color: #2196f3;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .confetti:nth-child(5) {
+            background-color: #9c27b0;
+            left: 90%;
+            animation-delay: 2.5s;
+        }
+
+        .flower {
+            position: absolute;
+        }
+
+        .top-left {
+            top: 10px;
+            left: 10px;
+        }
+
+        .top {
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .top-right {
+            top: 10px;
+            right: 10px;
+        }
+
+        .bottom-left {
+            bottom: 10px;
+            left: 10px;
+        }
+
+        .birthday-card:hover {
+            position: absolute;
+            transform: scale(110%, 110%)
+        }
+
+        div.birthday-card>flower-tag.bottom-left {
+            bottom: 0.1px;
+            left: 10px;
+        }
+
+        .bottom-right {
+            bottom: 10px;
+            right: 10px;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(400px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="birthday-card" onclick="handle()">
+        <div class="card-content">
+            <br>*
+            <h2 class="birthday-title">Շնորհավոր Մամա!</h2>
+            <img src="https://scholar.googleusercontent.com/citations?view_op=view_photo&user=s_BuX_oAAAAJ&citpid=2"
+                alt="Birthday Person" class="birthday-image">
+            <p class="birthday-message">Մի հատ լավ ծնունդ ստացի, և մի հատ լավ կյանք!</p>
+        </div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <flower-tag class="flower top" type="rose"></flower-tag>
+        <flower-tag class="flower bottom-left" type="rose" rotate="55"></flower-tag>
+    </div>
+    <flower-tag class="flower top-left" size="50" type="tulip" rotate="135"></flower-tag>
+    <flower-tag class="flower top" size="50" type="daffodil" rotate="180"></flower-tag>
+    <flower-tag class="flower top-right" size="50" type="tulip" rotate="225"></flower-tag>
+    <flower-tag class="flower bottom-left" size="50" type="tulip" rotate="45"></flower-tag>
+    <flower-tag class="flower bottom-right" size="50" type="tulip" rotate="315"></flower-tag>
+    <script>
+        function handle() {
+            const card = document.getElementsByClassName("birthday-card")[0]
+            card.style.transform = "scale(200%) translateX(-25%)";
+
+            setTimeout(() => {// Create and position new element
+                const newElement = document.createElement("div");
+                newElement.innerHTML = "<a href=\"https://www.youtube.com/watch?v=K3cD2CuRaiQ\"></a>"; // You can change this to whatever content you want
+                newElement.style.position = "absolute";
+                newElement.style.left = "50%";
+                newElement.style.top = "50%";
+                newElement.style.transform = "translate(-50%, -50%)";
+
+                // Add to document
+                document.body.appendChild(newElement);
+            }, 250);
+        }   
+    </script>
+</body>
+
+</html>
